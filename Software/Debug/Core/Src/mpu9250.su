@@ -1,0 +1,13 @@
+mpu9250.c:50:13:getMRes	4	static
+mpu9250.c:80:13:getGRes	4	static
+mpu9250.c:114:13:getARes	4	static
+mpu9250.c:150:7:MPU9250IsConnected	8	static
+mpu9250.c:186:13:I2CWrite	32	static
+mpu9250.c:221:13:I2CRead	32	static
+mpu9250.c:257:13:WriteMPURegister	16	static
+mpu9250.c:283:13:ReadMPURegister	16	static
+mpu9250.c:308:13:WriteAK8963Register	16	static
+mpu9250.c:335:13:ReadAK8963Register	16	static
+mpu9250.c:360:6:MPU9250Init	24	static
+mpu9250.c:419:6:ResetMPU9250	8	static
+mpu9250.c:443:6:AK8963Init	16	static

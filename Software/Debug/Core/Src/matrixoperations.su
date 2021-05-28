@@ -1,0 +1,6 @@
+matrixoperations.c:42:7:MatrixAdd	88	static
+matrixoperations.c:87:7:MatrixSubtract	88	static
+matrixoperations.c:127:7:MatrixMultiply	104	static
+matrixoperations.c:187:7:MatrixTranspose	56	static
+matrixoperations.c:222:7:MatrixScalarMultiply	64	static
+matrixoperations.c:256:7:MatrixElementwiseMultiply	88	static
