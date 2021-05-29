@@ -1,0 +1,4 @@
+kinematics.c:38:13:RotationMatrixUpdate	24	static
+kinematics.c:72:13:TranslationMatrixUpdate	8	static
+kinematics.c:99:13:EffectiveLinkLengthCalculation	144	static
+kinematics.c:175:13:MotorAngleUpdate	96	static
