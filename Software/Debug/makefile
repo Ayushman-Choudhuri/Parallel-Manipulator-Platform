@@ -40,8 +40,8 @@ Circle_Software_V1.bin \
 all: Circle_Software_V1.elf secondary-outputs
 
 # Tool invocations
-Circle_Software_V1.elf: $(OBJS) $(USER_OBJS) D:\Projects\BOBO\CIRCLE\Software\Circle\ Software\ Versions\Circle_Software_V1\STM32F103C8TX_FLASH.ld
-	arm-none-eabi-gcc -o "Circle_Software_V1.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"D:\Projects\BOBO\CIRCLE\Software\Circle Software Versions\Circle_Software_V1\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Circle_Software_V1.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Circle_Software_V1.elf: $(OBJS) $(USER_OBJS) D:\Projects\Parallel\ Manipulator\ System\CIRCLE\Circle\ -\ Github\ Repo\Software\STM32F103C8TX_FLASH.ld
+	arm-none-eabi-gcc -o "Circle_Software_V1.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"D:\Projects\Parallel Manipulator System\CIRCLE\Circle - Github Repo\Software\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Circle_Software_V1.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

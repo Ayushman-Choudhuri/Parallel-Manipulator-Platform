@@ -21,8 +21,12 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f1xx_it.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "steppermotor.h"
+#include "stm32f1xx_hal.h"
+#include "tim.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -184,6 +188,31 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
   /* USER CODE BEGIN SysTick_IRQn 0 */
+
+	if(Motor1State == 1)
+	{
+		Motor1CurrentStepCount ++;
+
+		Motor1Angle += Motor1StepAngle;
+
+		Motor1TargetStepCount = (uint32_t)(Motor1TargetAngle/Motor1StepAngle);
+
+		if (Motor1CurrentStepCount >= Motor1TargetStepCount)
+		{
+			Motor1State = 0;
+			HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_4);
+		}
+
+	}
+
+	else
+	{
+		;
+	}
+
+
+
+
 
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();

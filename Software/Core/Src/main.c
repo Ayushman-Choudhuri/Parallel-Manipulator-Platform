@@ -21,6 +21,7 @@
 #include "main.h"
 #include "i2c.h"
 #include "tim.h"
+#include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -66,9 +67,14 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+
+/*Test*/
 char MPUStatus1[] = "MPU 9250 Connected\n";
 char MPUStatus2[] = "MPU 9250 Not Connected\n";
 char MPUStatus3[] = "MPU 9250 Error\n";
+
+
+
 
   /* USER CODE END 1 */
 
@@ -92,7 +98,19 @@ char MPUStatus3[] = "MPU 9250 Error\n";
   MX_GPIO_Init();
   MX_I2C1_Init();
   MX_TIM3_Init();
+  MX_TIM1_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+
+  /*Start Motor Timers*/
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
+
+  /*Initialize Inertial Measurement Unit*/
   MPU9250Init();
   AK8963Init();
   /* USER CODE END 2 */
