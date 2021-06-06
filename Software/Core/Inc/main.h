@@ -58,6 +58,34 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define MOTOR_3_DIR_Pin GPIO_PIN_5
+#define MOTOR_3_DIR_GPIO_Port GPIOA
+#define MOTOR_3_STEP_Pin GPIO_PIN_6
+#define MOTOR_3_STEP_GPIO_Port GPIOA
+#define MOTOR_2_STEP_Pin GPIO_PIN_0
+#define MOTOR_2_STEP_GPIO_Port GPIOB
+#define MOTOR_1_STEP_Pin GPIO_PIN_1
+#define MOTOR_1_STEP_GPIO_Port GPIOB
+#define MOTOR_2_DIR_Pin GPIO_PIN_10
+#define MOTOR_2_DIR_GPIO_Port GPIOB
+#define MOTOR_1_DIR_Pin GPIO_PIN_11
+#define MOTOR_1_DIR_GPIO_Port GPIOB
+#define MOTOR_6_DIR_Pin GPIO_PIN_14
+#define MOTOR_6_DIR_GPIO_Port GPIOB
+#define MOTOR_6_STEP_Pin GPIO_PIN_8
+#define MOTOR_6_STEP_GPIO_Port GPIOA
+#define MOTOR_5_STEP_Pin GPIO_PIN_9
+#define MOTOR_5_STEP_GPIO_Port GPIOA
+#define MOTOR_4_STEP_Pin GPIO_PIN_10
+#define MOTOR_4_STEP_GPIO_Port GPIOA
+#define MOTOR_4_DIR_Pin GPIO_PIN_11
+#define MOTOR_4_DIR_GPIO_Port GPIOA
+#define MOTOR_5_DIR_Pin GPIO_PIN_15
+#define MOTOR_5_DIR_GPIO_Port GPIOA
+#define MPU_9250_I2C_SCL_Pin GPIO_PIN_8
+#define MPU_9250_I2C_SCL_GPIO_Port GPIOB
+#define MPU_9250_I2C_SDA_Pin GPIO_PIN_9
+#define MPU_9250_I2C_SDA_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
