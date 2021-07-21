@@ -19,15 +19,16 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "dma.h"
 #include "i2c.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
-
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "mpu9250.h"
+#include "steppermotorcontrol.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -68,9 +69,12 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+
+/*Test*/
 char MPUStatus1[] = "MPU 9250 Connected\n";
 char MPUStatus2[] = "MPU 9250 Not Connected\n";
 char MPUStatus3[] = "MPU 9250 Error\n";
+
 
   /* USER CODE END 1 */
 
@@ -92,10 +96,21 @@ char MPUStatus3[] = "MPU 9250 Error\n";
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_DMA_Init();
   MX_I2C1_Init();
+  MX_TIM3_Init();
+  MX_TIM1_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+
+  /*Start Motor Timers*/
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);		/* Start timer of motor 1*/
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);		/* Start timer of motor 2*/
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);		/* Start timer of motor 3*/
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);		/* Start timer of motor 6*/
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);		/* Start timer of motor 5*/
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);		/* Start timer of motor 4*/
+
+  /*Initialize Inertial Measurement Unit*/
   MPU9250Init();
   AK8963Init();
   /* USER CODE END 2 */
@@ -124,6 +139,8 @@ char MPUStatus3[] = "MPU 9250 Error\n";
 	  {
 		  HAL_UART_Transmit(&huart1, (uint8_t *)MPUStatus3, sizeof(MPUStatus3),100);
 	  }
+
+
 
 
 	  HAL_Delay(100);
@@ -175,6 +192,33 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	__NOP();
 }
 
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)			/*Callback Function for all the external interrupt functions for limit switches 1-6*/
+{
+	switch(GPIO_Pin)
+	{
+	case GPIO_PIN_7 : LimitSwitchStateDetect(1);		/* Limit Switch 1 State Update*/
+					  break;
+
+	case GPIO_PIN_2	: LimitSwitchStateDetect(2)	;		/* Limit Switch 2 State Update */
+					  break;
+
+	case GPIO_PIN_1	: LimitSwitchStateDetect(3)	;		/* Limit Switch 3 State Update */
+					  break;
+
+	case GPIO_PIN_4 : LimitSwitchStateDetect(4)	;		/* Limit Switch 4 State Update */
+					  break;
+
+	case GPIO_PIN_12: LimitSwitchStateDetect(5)	;		/* Limit Switch 5 State Update */
+					  break;
+
+	case GPIO_PIN_13: LimitSwitchStateDetect(6)	;		/* Limit Switch 6 State Update */
+					  break;
+
+	default: 		  break;
+
+	}
+}
 /* USER CODE END 4 */
 
 /**
