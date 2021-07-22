@@ -27,23 +27,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 00000029  00000000  00000000  00020018  2**0
                   CONTENTS, READONLY
- 12 .debug_info   0000eeaa  00000000  00000000  00020041  2**0
+ 12 .debug_info   0000ef0f  00000000  00000000  00020041  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_abbrev 000021a9  00000000  00000000  0002eeeb  2**0
+ 13 .debug_abbrev 000021db  00000000  00000000  0002ef50  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_aranges 00000f28  00000000  00000000  00031098  2**3
+ 14 .debug_aranges 00000f30  00000000  00000000  00031130  2**3
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_ranges 00000e28  00000000  00000000  00031fc0  2**3
+ 15 .debug_ranges 00000e30  00000000  00000000  00032060  2**3
                   CONTENTS, READONLY, DEBUGGING
- 16 .debug_macro  0000283a  00000000  00000000  00032de8  2**0
+ 16 .debug_macro  0000285e  00000000  00000000  00032e90  2**0
                   CONTENTS, READONLY, DEBUGGING
- 17 .debug_line   0000c8b9  00000000  00000000  00035622  2**0
+ 17 .debug_line   0000c8fa  00000000  00000000  000356ee  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_str    0008ce89  00000000  00000000  00041edb  2**0
+ 18 .debug_str    0008cf22  00000000  00000000  00041fe8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 19 .comment      0000007b  00000000  00000000  000ced64  2**0
+ 19 .comment      0000007b  00000000  00000000  000cef0a  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00003f70  00000000  00000000  000cede0  2**2
+ 20 .debug_frame  00003f98  00000000  00000000  000cef88  2**2
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -1796,7 +1796,7 @@ void AK8963Init()
 
 08000dfc <LimitSwitchDebounce>:
  * Version No.		 Date			Author 					Email				Description
- * 	  1.0		  20-03-2021	Ayushman Choudhuri	 ayushc205@gmail.com
+ * 	  1.0		  20-03-2021	Ayushman Choudhuri	 ayushc205@gmail.com		base file
 */
 
 static void LimitSwitchDebounce(uint32_t limit_switch_index)
@@ -1843,7 +1843,7 @@ static void LimitSwitchDebounce(uint32_t limit_switch_index)
  8000e38:	3201      	adds	r2, #1
  8000e3a:	490e      	ldr	r1, [pc, #56]	; (8000e74 <LimitSwitchDebounce+0x78>)
  8000e3c:	f841 2023 	str.w	r2, [r1, r3, lsl #2]
-					if (LimitSwitchCounter[limit_switch_index -1] >= LIMIT_SWITCH_DEBOUNCE_THRESHOLD)
+					if (LIMIT_SWITCH_DEBOUNCE_THRESHOLD <= LimitSwitchCounter[limit_switch_index -1])
  8000e40:	687b      	ldr	r3, [r7, #4]
  8000e42:	3b01      	subs	r3, #1
  8000e44:	4a0b      	ldr	r2, [pc, #44]	; (8000e74 <LimitSwitchDebounce+0x78>)
@@ -1934,7 +1934,7 @@ void LimitSwitchStateDetect(uint32_t limit_switch_index)
  * 	  1.0		  20-03-2021	Ayushman Choudhuri	 ayushc205@gmail.com
 */
 
-void LimitSwitchTriggerScan()
+void LimitSwitchTriggerScan(void)
 {
  8000ebc:	b580      	push	{r7, lr}
  8000ebe:	b082      	sub	sp, #8

@@ -9,8 +9,11 @@
 
 #define HIGH									(uint8_t)1
 #define LOW										(uint8_t)0
-#define CLOCKWISE								(int8_t)1
-#define ANTICLOCKWISE							(int8_t)-1
+#define TRUE									(uint8_t )1
+#define FALSE									(uint8_t )0
+#define ANGLE_UP								(int8_t)1
+#define ANGLE_DOWN								(int8_t)-1
+#define ANGLE_HOLD								(int8_t)0
 #define LIMIT_SWITCH_DEBOUNCE_THRESHOLD			(uint32_t)40
 
 
