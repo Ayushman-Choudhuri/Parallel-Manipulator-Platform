@@ -58,6 +58,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define INPUT_VOLTAGE_FEEDBACK_Pin GPIO_PIN_0
+#define INPUT_VOLTAGE_FEEDBACK_GPIO_Port GPIOA
 #define LIMIT_SWITCH_3_Pin GPIO_PIN_1
 #define LIMIT_SWITCH_3_GPIO_Port GPIOA
 #define LIMIT_SWITCH_3_EXTI_IRQn EXTI1_IRQn

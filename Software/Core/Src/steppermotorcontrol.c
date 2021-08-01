@@ -17,16 +17,16 @@
 
 /*.........................................Global Variable Definitions.......................................*/
 
-float32_t MotorTargetAngle[6] = {0,0,0,0,0,0};
-float32_t MotorTargetAnglePrevious[6] = {0,0,0,0,0,0};
-uint8_t   MotorTagetAngleSet[6] = {FALSE,FALSE,FALSE,FALSE,FALSE,FALSE};
-uint32_t  MotorCurrentAngle[6] = {0,0,0,0,0,0};
-uint32_t  MotorTargetStepCount[6] = {0,0,0,0,0,0};
-uint32_t  MotorCurrentStepCount[6] = {0,0,0,0,0,0};
-int8_t    MotorDirection[6] = {ANGLE_UP,ANGLE_UP,ANGLE_UP,ANGLE_UP,ANGLE_UP,ANGLE_UP};
-int8_t    MotorDirectionBias[6] = {1,1,1,1,1,1};
-uint8_t   MotorState[6] = {HIGH, HIGH,HIGH,HIGH,HIGH,HIGH};
-
+float32_t MotorTargetAngle[6] = {180,180,90,90,180,180};									/*Target angles of respective motors*/
+float32_t MotorTargetAnglePrevious[6] = {0,0,0,0,0,0};									/*Previous target angles of respective motors*/
+uint8_t   MotorTagetAngleSet[6] = {FALSE,FALSE,FALSE,FALSE,FALSE,FALSE};				/*If target angle has been set (HIGH) or not (LOW)*/
+float32_t MotorCurrentAngle[6] = {0.0,0.0,0.0,0.0,0.0,0.0};											/*The current angle of the Motor*/
+uint32_t  MotorTargetStepCount[6] = {0,0,0,0,0,0};										/*The total number of steps needed by motors to reach target angle*/
+uint32_t  MotorCurrentStepCount[6] = {0,0,0,0,0,0};										/*The total number of steps already excecuted*/
+int8_t    MotorDirection[6] = {ANGLE_HOLD,ANGLE_HOLD,ANGLE_HOLD,ANGLE_HOLD,ANGLE_HOLD,ANGLE_HOLD};	/*The direction in which the motor needs to move*/
+int8_t    MotorDirectionBias[6] = {-1,1,-1,1,1,1};										/*The default direction in which the motor moves on power up*/
+uint8_t   MotorState[6] = {HIGH,HIGH,HIGH,HIGH,HIGH,HIGH};								/*Motor Running - HIGH , Motor Stop - LOW*/
+uint8_t   MotorStateSet[6] ={LOW, LOW, LOW, LOW, LOW, LOW};								/*If the motor state has already been set once*/
 
 uint8_t	  LimitSwitchState[6] = {LOW, LOW, LOW, LOW, LOW, LOW};
 uint8_t   LimitSwitchMode[6] = {LOW, LOW, LOW, LOW, LOW, LOW};
@@ -36,6 +36,8 @@ uint32_t  LimitSwitchCounter[6] = {0,0,0,0,0,0};
 uint8_t test = 0;
 uint32_t test2 = 0;
 uint8_t test3 = 0;
+uint32_t TestCounter  = 0;
+uint32_t TestSetIndex = 0;
 /*........................................Function Definitions...............................................*/
 
 /*
@@ -111,7 +113,7 @@ static void LimitSwitchDebounce(uint32_t limit_switch_index)
 
 void LimitSwitchStateDetect(uint32_t limit_switch_index)
 {
-	switch (LimitSwitchState[limit_switch_index -1])
+	switch (LimitSwitchState[limit_switch_index -1]) /*Every time the function is triggered from the external interrupt, the updated value is the opposite of the old value*/
 								  {
 						  	  	  case LOW:  LimitSwitchState[limit_switch_index -1] = HIGH;
 						  	  	  	  	  	 break;
@@ -176,7 +178,9 @@ static void MotorStopTriggerDetect(uint8_t motor_index)
 		case HIGH: MotorState[motor_index -1] = LOW;
 				   MotorCurrentAngle[motor_index - 1] = 0;
 				   break;
-		case LOW:  break;
+		case LOW:  MotorState[motor_index - 1] = HIGH;
+				   MotorStateSet[motor_index] = LOW;
+				   break;
 
 		default:   break;
 	}
@@ -212,13 +216,14 @@ void MotorStopTriggerScan()
 
 /*
  * Function Name	 			: MotorRotateAbsolute()
- * Function Description 		:
- * Return Type					:
- * Return Type Description 		:
+ * Function Description 		: Rotates the motor shaft of a specific motor to a specific angle (absolute) by reading the motor parameters from global arrays
+ * Return Type					: void
+ * Return Type Description 		: NA
  *
- * Parameter(s)					: None
- * Parameter Description		: None
- * Global Variables Accessed	: None
+ * Parameter(s)					: motor_index
+ * Parameter Description		: motor_index : index of the motor that needs to be actuated.
+ * Global Variables Accessed	: MotorState , MotorTargetAngleSet , MotorTargetAnglePrevious, MotorTargetStepCount , MotorTargetAngleSet, MotorDirection
+ *
  * Global Variable(s) Modified	: None
  * Library Function(s) Called	:
  * Called by					:
@@ -228,69 +233,154 @@ void MotorStopTriggerScan()
  * Version No.		 Date			Author 					Email				Description
  * 	  1.0		  20-03-2021	Ayushman Choudhuri	 ayushc205@gmail.com
 */
-
 static void MotorRotateAbsolute(uint8_t motor_index)
-{
+{	/*Declare Local variables*/
 	float32_t delta_motor_angle = 0;
 
-	switch(MotorState[motor_index -1])
+	switch(MotorTagetAngleSet[motor_index -1])
 	{
-		case HIGH: switch(MotorTagetAngleSet[motor_index -1])
+	case FALSE: /* Update Motor Target Variable and Calculate the required numbers of steps*/
+
+				MotorTargetStepCount[motor_index -1] = (uint32_t)(MotorTargetAngle[motor_index -1]/MOTOR_STEP_ANGLE);
+
+				MotorTagetAngleSet[motor_index -1] = TRUE;
+
+				/*Set Motor Controller Direction based on difference of previous and current motor target angle*/
+				delta_motor_angle = MotorTargetAngle[motor_index -1]  - MotorTargetAnglePrevious[motor_index -1];
+
+				if (delta_motor_angle > 0)
+				{
+				  MotorDirection[motor_index-1] = ANGLE_UP;
+				}
+
+				else if (delta_motor_angle < 0)
+				{
+					MotorDirection[motor_index-1] = ANGLE_DOWN;
+				}
+
+				else if (delta_motor_angle == 0)
+				{
+					MotorDirection[motor_index-1] = ANGLE_HOLD;
+				}
+
+				MotorTargetAnglePrevious[motor_index -1] = MotorTargetAngle[motor_index -1];
+				break;
+
+	case TRUE: 	/*Check if there has been a change in the target angle */
+
+				if (MotorTargetAngle[motor_index -1] != MotorTargetAnglePrevious[motor_index -1]) /*Condition for target angle change*/
+				{
+				  MotorTagetAngleSet[motor_index -1] = FALSE;
+				  break;
+				}
+
+				else
+				{
+					switch(MotorDirection[motor_index -1])
 					{
-						case FALSE : /* Set the  target Angle and Calculate the required numbers of steps*/
 
-									MotorTargetAnglePrevious[motor_index -1] = MotorTargetAngle[motor_index -1];
-									MotorTargetStepCount[motor_index -1] = (uint32_t)(MotorTargetAngle[motor_index -1]/MOTOR_STEP_ANGLE);
-									MotorTagetAngleSet[motor_index -1] = TRUE;
-									break;
+						case ANGLE_UP:	 MotorCurrentStepCount[motor_index -1] ++;
+										 MotorCurrentAngle[motor_index -1] += MOTOR_PWM_TIMER_FREQUENCY*MOTOR_STEP_ANGLE;
+										 break;
 
-						case TRUE : /*Check if there has been a change in the target angle */
+						case ANGLE_DOWN: MotorCurrentStepCount[motor_index -1] --;
+										 MotorCurrentAngle[motor_index -1] -= MOTOR_PWM_TIMER_FREQUENCY*MOTOR_STEP_ANGLE;
+										 break;
 
-									if (MotorTargetAngle[motor_index -1] != MotorTargetAnglePrevious[motor_index -1]) /*Condition for target angle change*/
-									{
-									  MotorTagetAngleSet[motor_index -1] = FALSE;
+						case ANGLE_HOLD: break;
 
-									  delta_motor_angle = MotorTargetAngle[motor_index -1]  - MotorTargetAnglePrevious[motor_index -1];
-
-									  if (delta_motor_angle > 0)
-									  {
-										  MotorDirection[motor_index] = MotorDirectionBias[motor_index -1]*ANGLE_UP;
-									  }
-
-									  else if (delta_motor_angle < 0)
-									  {
-										  MotorDirection[motor_index] = MotorDirectionBias[motor_index -1]*ANGLE_DOWN;
-									  }
-
-									  else
-									  {
-										  ;
-									  }
-									  break;
-									}
-
-									else if (MotorTargetAngle[motor_index -1] == MotorTargetAnglePrevious[motor_index -1]) /*Condition for no change in target angle*/
-									{
-										MotorCurrentStepCount[motor_index -1] ++;
-										MotorCurrentAngle[motor_index -1] += MOTOR_STEP_ANGLE;
-									}
-
-									else
-									{
-										;
-									}
-									break;
-
-
-						default:    break;
+						default		   : break;
 					}
+				}
+					/*Condition if the Target angle has been reached*/
+				if (MotorCurrentAngle[motor_index -1] >= MotorTargetAngle[motor_index -1]) /*Condition if the motor target angle has been reached*/
+				{
+					MotorState[motor_index -1] = LOW;
+					MotorCurrentStepCount[motor_index -1] = 0;
+					MotorDirection[motor_index -1] = ANGLE_HOLD;
+					break;
+				}
 
-				   break;
 
-		case LOW:  break;
+				break;
 
-		default :  break;
+	default :  break;
+
+	}
+
+	if (MotorCurrentAngle[motor_index -1] >= MotorTargetAngle[motor_index -1]) /*Condition if the motor target angle has been reached*/
+	{
+		MotorState[motor_index -1] = LOW;
+		MotorCurrentStepCount[motor_index -1] = 0;
+		MotorTargetAnglePrevious[motor_index -1] = MotorTargetAngle[motor_index -1];
+		MotorDirection[motor_index -1] = ANGLE_HOLD;
+	}
+
+}
+/*
+ * Function Name	 			: MotorActuate()
+ * Function Description 		: Moves the motor shafts of all the motors based on the target angle matrix of the motor system
+ * Return Type					: void
+ * Return Type Description 		: NA
+ *
+ * Parameter(s)					:
+ * Parameter Description		:
+ * Global Variables Accessed	:
+ *
+ * Global Variable(s) Modified	:
+ * Library Function(s) Called	:
+ * Called by					:
+ *  Notes			 			: This function is to be excecuted only in the Systick handler or any loop which excecutes every 1ms
+
+ * Change Log
+ * Version No.		 Date			Author 					Email				Description
+ * 	  1.0		  20-03-2021	Ayushman Choudhuri	 ayushc205@gmail.com
+*/
+
+void MotorActuate()
+{
+	for(uint8_t motor_index = 1 ; motor_index <=6 ; motor_index ++)
+	{
+		MotorRotateAbsolute(motor_index);
 	}
 }
+
+/*........................................................Test Function.....................................*/
+
+void MotorActuateTest()
+{	/*Test Variables*/
+
+	uint32_t test_set_changeover_time = 2000;
+
+	float32_t motor_test_angle_set[3][6] = {{180,180,180,180,180,180},
+											{90,90,90,90,90,90},
+											{360,360,360,360,360,360}};
+	TestCounter ++;
+
+	if (TestCounter >= test_set_changeover_time)
+	{
+		for (uint32_t test_angle = 0 ; test_angle <= 5 ; test_angle ++)
+		{
+			MotorTargetAngle[test_angle] = motor_test_angle_set[TestSetIndex][test_angle];
+		}
+
+		TestSetIndex ++ ;
+
+		if(TestSetIndex >= 3)
+		{
+			TestSetIndex = 0;
+		}
+
+		TestCounter = 0;
+	}
+
+   MotorActuate();
+}
+
+
+
+
+
+
 
 
