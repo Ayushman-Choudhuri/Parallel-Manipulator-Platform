@@ -193,148 +193,374 @@ void SysTick_Handler(void)
 
 	/*Hardware level control of motor direction pins and motor timers*/
 
-	for (uint8_t motor_index = 1; motor_index <=6 ; motor_index ++)
+	for(uint8_t motor_index = 1 ; motor_index <=6 ; motor_index ++ )
 	{
-		switch(MotorState[motor_index-1])
+		switch(motor_index)
 		{
-			case HIGH:switch(motor_index)
-					  {
-						case 1: /*Direction Control of Motor 1*/
+			case 1: switch(MotorState[motor_index -1])
+					{
+						case HIGH: switch(MotorHighStateSetFlag[motor_index -1])
+									{
+									   case LOW: HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
+									   	   	   	 MotorHighStateSetFlag[motor_index -1] = HIGH;
+									   			 break;
 
-								switch(MotorDirection[motor_index-1])
-								{
-									case ANGLE_UP:  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_11, GPIO_PIN_SET);
+									   case HIGH: break;
 
-												    break;
+									   default: break ;
+									}
 
-									case ANGLE_DOWN:HAL_GPIO_WritePin(GPIOB, GPIO_PIN_11, GPIO_PIN_RESET);
-													break;
+									switch(MotorDirection[motor_index-1])
+									{
+										case ANGLE_UP:  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_11, GPIO_PIN_SET);
+													    break;
 
-									case ANGLE_HOLD:break;
+										case ANGLE_DOWN:HAL_GPIO_WritePin(GPIOB, GPIO_PIN_11, GPIO_PIN_RESET);
+														break;
 
-									default : break;
-								}
+										case ANGLE_HOLD:break;
 
-								break;
+										default : break;
+									}
 
-						case 2: /*Direction Control of Motor 2*/
-								switch(MotorDirection[motor_index-1])
-								{
-									case ANGLE_UP:  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_RESET);
+									break;
 
-													break;
+						case LOW : HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_4);
+								   break;
 
-									case ANGLE_DOWN: HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_SET);
-													break;
+						default:  break;
+					}
 
-									case ANGLE_HOLD:break;
+			case 2: switch(MotorState[motor_index -1])
+					{
+						case HIGH: switch(MotorHighStateSetFlag[motor_index -1])
+									{
+									   case LOW: HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
+									   			 MotorHighStateSetFlag[motor_index -1] = HIGH;
+									   			 break;
 
-									default : break;
-								}
+									   case HIGH: break;
 
-								break;
-						case 3:/*Direction Control of Motor 3*/
-								switch(MotorDirection[motor_index-1])
-								{
-									case ANGLE_UP:  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
+									   default: break ;
+									}
 
-													break;
+									switch(MotorDirection[motor_index-1])
+									{
+										case ANGLE_UP:  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_RESET);
 
-									case ANGLE_DOWN:HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-													break;
+														break;
 
-									case ANGLE_HOLD:break;
+										case ANGLE_DOWN: HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_SET);
+														break;
 
-									default : break;
-								}
+										case ANGLE_HOLD:break;
+
+										default : break;
+									}
+
+									break;
+
+						case LOW : HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_3);
+								   break;
+
+						default: break;
+					}
+
+			case 3: switch(MotorState[motor_index -1])
+					{
+						case HIGH: switch(MotorHighStateSetFlag[motor_index -1])
+									{
+									   case LOW: HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+									   			 MotorHighStateSetFlag[motor_index -1] = HIGH;
+									   			 break;
+
+									   case HIGH: break;
+
+									   default: break ;
+									}
+
+									switch(MotorDirection[motor_index-1])
+									{
+										case ANGLE_UP:  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
+
+														break;
+
+										case ANGLE_DOWN:HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+														break;
+
+										case ANGLE_HOLD:break;
+
+										default : break;
+									}
 
 
-								break;
-						case 4:/*Direction Control of Motor 4*/
-								switch(MotorDirection[motor_index-1])
-								{
-									case ANGLE_UP:  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_RESET);
+									break;
 
-													break;
+						case LOW : HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_1);
+								   break;
 
-									case ANGLE_DOWN: HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_SET);
-													break;
+						default: break;
+					}
 
-									case ANGLE_HOLD:break;
+			case 4: switch(MotorState[motor_index -1])
+					{
+						case HIGH: switch(MotorHighStateSetFlag[motor_index -1])
+									{
+									   case LOW: HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
+									   			 MotorHighStateSetFlag[motor_index -1] = HIGH;
+									   			 break;
 
-									default : break;
-								}
-								break;
+									   case HIGH: break;
 
-						case 5:/*Direction Control of Motor 5*/
-								switch(MotorDirection[motor_index-1])
-								{
-									case ANGLE_UP:  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, GPIO_PIN_RESET);
+									   default: break ;
+									}
 
-													break;
+									switch(MotorDirection[motor_index-1])
+									{
+										case ANGLE_UP:  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_RESET);
 
-									case ANGLE_DOWN: HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, GPIO_PIN_SET);
-													break;
+														break;
 
-									case ANGLE_HOLD:break;
+										case ANGLE_DOWN: HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_SET);
+														break;
 
-									default : break;
-								}
-								break;
+										case ANGLE_HOLD:break;
 
-						case 6:/*Direction Control of Motor 6*/
-								switch(MotorDirection[motor_index-1])
-								{
-									case ANGLE_UP:  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
+										default : break;
+									}
+									break;
 
-													break;
+						case LOW : HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_3);
+								   break;
 
-									case ANGLE_DOWN: HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
-													break;
+						default: break;
+					}
 
-									case ANGLE_HOLD:break;
+			case 5: switch(MotorState[motor_index -1])
+					{
+						case HIGH: switch(MotorHighStateSetFlag[motor_index -1])
+									{
+									   case LOW: HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+									   			 MotorHighStateSetFlag[motor_index -1] = HIGH;
+									   			 break;
 
-									default : break;
-								}
+									   case HIGH: break;
 
-								break;
+									   default: break ;
+									}
 
-						default : break;
-					  }
-					   break;
+									switch(MotorDirection[motor_index-1])
+									{
+										case ANGLE_UP:  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, GPIO_PIN_RESET);
 
-			case LOW: switch(motor_index)
-					  {
-						case 1: HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_4);
-								break;
+														break;
 
-						case 2: HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_3);
-								break;
+										case ANGLE_DOWN: HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, GPIO_PIN_SET);
+														break;
 
-						case 3: HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_1);
-								break;
+										case ANGLE_HOLD:break;
 
-						case 4: HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_3);
-								break;
+										default : break;
+									}
+									break;
 
-						case 5:HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_2);
+						case LOW : HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_2);
+								   break;
 
-								break;
+						default: break;
+					}
 
-						case 6:
-								HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
-								break;
+			case 6: switch(MotorState[motor_index -1])
+					{
+						case HIGH: switch(MotorHighStateSetFlag[motor_index -1])
+									{
+									   case LOW: HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+									   			 MotorHighStateSetFlag[motor_index -1] = HIGH;
+									   			 break;
 
-						default : break;
-					  }
+									   case HIGH: break;
 
-					  break;
+									   default: break ;
+									}
 
-			default : break;
+									switch(MotorDirection[motor_index-1])
+									{
+										case ANGLE_UP:  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
+
+														break;
+
+										case ANGLE_DOWN: HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
+														break;
+
+										case ANGLE_HOLD:break;
+
+										default : break;
+									}
+
+									break;
+
+						case LOW : HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
+								   break;
+
+						default: break;
+					}
+
+
+
 		}
-
-
 	}
+
+
+
+
+
+
+
+
+
+
+
+//	for (uint8_t motor_index = 1; motor_index <=6 ; motor_index ++)
+//	{
+//		switch(MotorState[motor_index-1])
+//		{
+//			case HIGH: switch(motor_index)
+//					  {
+//						case 1: /*Direction Control of Motor 1*/
+//
+//								switch(MotorDirection[motor_index-1])
+//								{
+//									case ANGLE_UP:  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_11, GPIO_PIN_SET);
+//												    break;
+//
+//									case ANGLE_DOWN:HAL_GPIO_WritePin(GPIOB, GPIO_PIN_11, GPIO_PIN_RESET);
+//													break;
+//
+//									case ANGLE_HOLD:break;
+//
+//									default : break;
+//								}
+//
+//								break;
+//
+//						case 2: /*Direction Control of Motor 2*/
+//								switch(MotorDirection[motor_index-1])
+//								{
+//									case ANGLE_UP:  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_RESET);
+//
+//													break;
+//
+//									case ANGLE_DOWN: HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_SET);
+//													break;
+//
+//									case ANGLE_HOLD:break;
+//
+//									default : break;
+//								}
+//
+//								break;
+//						case 3:/*Direction Control of Motor 3*/
+//								switch(MotorDirection[motor_index-1])
+//								{
+//									case ANGLE_UP:  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
+//
+//													break;
+//
+//									case ANGLE_DOWN:HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+//													break;
+//
+//									case ANGLE_HOLD:break;
+//
+//									default : break;
+//								}
+//
+//
+//								break;
+//						case 4:/*Direction Control of Motor 4*/
+//								switch(MotorDirection[motor_index-1])
+//								{
+//									case ANGLE_UP:  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_RESET);
+//
+//													break;
+//
+//									case ANGLE_DOWN: HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_SET);
+//													break;
+//
+//									case ANGLE_HOLD:break;
+//
+//									default : break;
+//								}
+//								break;
+//
+//						case 5:/*Direction Control of Motor 5*/
+//								switch(MotorDirection[motor_index-1])
+//								{
+//									case ANGLE_UP:  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, GPIO_PIN_RESET);
+//
+//													break;
+//
+//									case ANGLE_DOWN: HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, GPIO_PIN_SET);
+//													break;
+//
+//									case ANGLE_HOLD:break;
+//
+//									default : break;
+//								}
+//								break;
+//
+//						case 6:/*Direction Control of Motor 6*/
+//								switch(MotorDirection[motor_index-1])
+//								{
+//									case ANGLE_UP:  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
+//
+//													break;
+//
+//									case ANGLE_DOWN: HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
+//													break;
+//
+//									case ANGLE_HOLD:break;
+//
+//									default : break;
+//								}
+//
+//								break;
+//
+//						default : break;
+//					  }
+//					   break;
+//
+//			case LOW: switch(motor_index)
+//					  {
+//						case 1: HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_4);
+//								break;
+//
+//						case 2: HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_3);
+//								break;
+//
+//						case 3: HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_1);
+//								break;
+//
+//						case 4: HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_3);
+//								break;
+//
+//						case 5:HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_2);
+//
+//								break;
+//
+//						case 6:
+//								HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
+//								break;
+//
+//						default : break;
+//					  }
+//
+//					  break;
+//
+//			default : break;
+//		}
+//
+//
+//	}
 
 
 

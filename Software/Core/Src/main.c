@@ -108,9 +108,10 @@ char MPUStatus3[] = "MPU 9250 Error\n";
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);		/* Start timer of motor 1*/
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);		/* Start timer of motor 2*/
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);		/* Start timer of motor 3*/
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);		/* Start timer of motor 4*/
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);		/* Start timer of motor 6*/
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);		/* Start timer of motor 5*/
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);		/* Start timer of motor 4*/
+
 
   /*Initialize Inertial Measurement Unit*/
   MPU9250Init();
