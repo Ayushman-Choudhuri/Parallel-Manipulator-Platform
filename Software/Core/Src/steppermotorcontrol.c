@@ -17,14 +17,13 @@
 
 /*.........................................Global Variable Definitions.......................................*/
 
-float32_t MotorTargetAngle[6] = {0,0,0,0,0,0};									/*Target angles of respective motors*/
+float32_t MotorTargetAngle[6] = {0,0,0,0,0,0};											/*Target angles of respective motors*/
 float32_t MotorTargetAnglePrevious[6] = {0,0,0,0,0,0};									/*Previous target angles of respective motors*/
 uint8_t   MotorTagetAngleSet[6] = {FALSE,FALSE,FALSE,FALSE,FALSE,FALSE};				/*If target angle has been set (HIGH) or not (LOW)*/
 float32_t MotorCurrentAngle[6] = {0.0,0.0,0.0,0.0,0.0,0.0};											/*The current angle of the Motor*/
 uint32_t  MotorTargetStepCount[6] = {0,0,0,0,0,0};										/*The total number of steps needed by motors to reach target angle*/
 uint32_t  MotorCurrentStepCount[6] = {0,0,0,0,0,0};										/*The total number of steps already excecuted*/
 int8_t    MotorDirection[6] = {ANGLE_HOLD,ANGLE_HOLD,ANGLE_HOLD,ANGLE_HOLD,ANGLE_HOLD,ANGLE_HOLD};	/*The direction in which the motor needs to move*/
-//int8_t    MotorDirectionBias[6] = {-1,1,-1,1,1,-1};										/*The default direction in which the motor moves on power up*/
 uint8_t   MotorState[6] = {HIGH,HIGH,HIGH,HIGH,HIGH,HIGH};								/*Motor Running - HIGH , Motor Stop - LOW*/
 uint8_t   MotorHighStateSetFlag[6] ={LOW, LOW, LOW, LOW, LOW, LOW};								/*If the motor state has already been set once*/
 
@@ -284,12 +283,19 @@ static void MotorRotateAbsolute(uint8_t motor_index)
 				{
 					switch(MotorDirection[motor_index -1])
 					{
-
-						case ANGLE_UP:	 MotorCurrentStepCount[motor_index -1] = MotorCurrentStepCount[motor_index -1] + (MOTOR_PWM_TIMER_FREQUENCY/MOTOR_LOOP_UPDATE_FREQUENCY);
+						case ANGLE_UP:	 MotorCurrentStepCount[motor_index -1] = MotorCurrentStepCount[motor_index -1] + (uint32_t)(MOTOR_PWM_TIMER_FREQUENCY/MOTOR_LOOP_UPDATE_FREQUENCY);
 										 MotorCurrentAngle[motor_index -1] += (MOTOR_PWM_TIMER_FREQUENCY/MOTOR_LOOP_UPDATE_FREQUENCY)*MOTOR_STEP_ANGLE;
 										 break;
 
-						case ANGLE_DOWN: MotorCurrentStepCount[motor_index -1] = MotorCurrentStepCount[motor_index -1] - (MOTOR_PWM_TIMER_FREQUENCY/MOTOR_LOOP_UPDATE_FREQUENCY);
+						case ANGLE_DOWN: if(MotorCurrentStepCount[motor_index -1] <= 0) /*Temporary fix to the variable range overshoot bug - will be solved later*/
+											{
+												;
+											}
+										else
+											{
+											  MotorCurrentStepCount[motor_index -1] = MotorCurrentStepCount[motor_index -1] - (uint32_t)(MOTOR_PWM_TIMER_FREQUENCY/MOTOR_LOOP_UPDATE_FREQUENCY);
+											}
+
 										 MotorCurrentAngle[motor_index -1] -= (MOTOR_PWM_TIMER_FREQUENCY/MOTOR_LOOP_UPDATE_FREQUENCY)*MOTOR_STEP_ANGLE;
 										 break;
 
@@ -306,7 +312,6 @@ static void MotorRotateAbsolute(uint8_t motor_index)
 					switch(MotorDirection[motor_index -1])
 					{
 					 case ANGLE_UP:	MotorState[motor_index -1] = LOW;
-
 									MotorTargetAnglePrevious[motor_index -1] = MotorTargetAngle[motor_index -1];
 									MotorDirection[motor_index -1] = ANGLE_HOLD;
 									MotorTagetAngleSet[motor_index -1] = FALSE;
@@ -372,12 +377,13 @@ void MotorActuate()
 	}
 }
 
+
 /*........................................................Test Function.....................................*/
 
 void MotorActuateTest()
 {	/*Test Variables*/
 
-	uint32_t test_set_changeover_time = 250;
+	uint32_t test_set_changeover_time = 500;
 	uint32_t  test_set_size = 7;
 	float32_t motor_test_angle_set[7][6] = {{0,0,0,0,0,0},
 											{90,90,90,90,90,90},

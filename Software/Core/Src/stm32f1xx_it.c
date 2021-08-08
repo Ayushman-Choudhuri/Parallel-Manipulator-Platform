@@ -410,16 +410,6 @@ void SysTick_Handler(void)
 		}
 	}
 
-
-
-
-
-
-
-
-
-
-
 //	for (uint8_t motor_index = 1; motor_index <=6 ; motor_index ++)
 //	{
 //		switch(MotorState[motor_index-1])
