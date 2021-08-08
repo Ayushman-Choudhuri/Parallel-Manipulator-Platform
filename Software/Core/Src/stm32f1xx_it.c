@@ -351,12 +351,12 @@ void SysTick_Handler(void)
 
 									switch(MotorDirection[motor_index-1])
 									{
-										case ANGLE_UP:  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, GPIO_PIN_RESET);
+										case ANGLE_UP:  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_RESET);
 
 														break;
 
-										case ANGLE_DOWN: HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, GPIO_PIN_SET);
-														break;
+										case ANGLE_DOWN: HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_SET);
+														 break;
 
 										case ANGLE_HOLD:break;
 
