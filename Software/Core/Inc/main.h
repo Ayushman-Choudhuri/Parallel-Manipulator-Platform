@@ -58,6 +58,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define INPUT_VOLTAGE_FEEDBACK_Pin GPIO_PIN_0
+#define INPUT_VOLTAGE_FEEDBACK_GPIO_Port GPIOA
 #define LIMIT_SWITCH_3_Pin GPIO_PIN_1
 #define LIMIT_SWITCH_3_GPIO_Port GPIOA
 #define LIMIT_SWITCH_3_EXTI_IRQn EXTI1_IRQn
@@ -87,6 +89,8 @@ void Error_Handler(void);
 #define LIMIT_SWITCH_5_EXTI_IRQn EXTI15_10_IRQn
 #define MOTOR_6_DIR_Pin GPIO_PIN_14
 #define MOTOR_6_DIR_GPIO_Port GPIOB
+#define MOTOR_5_DIR_Pin GPIO_PIN_15
+#define MOTOR_5_DIR_GPIO_Port GPIOB
 #define MOTOR_6_STEP_Pin GPIO_PIN_8
 #define MOTOR_6_STEP_GPIO_Port GPIOA
 #define MOTOR_5_STEP_Pin GPIO_PIN_9
@@ -95,8 +99,6 @@ void Error_Handler(void);
 #define MOTOR_4_STEP_GPIO_Port GPIOA
 #define MOTOR_4_DIR_Pin GPIO_PIN_11
 #define MOTOR_4_DIR_GPIO_Port GPIOA
-#define MOTOR_5_DIR_Pin GPIO_PIN_15
-#define MOTOR_5_DIR_GPIO_Port GPIOA
 #define LIMIT_SWITCH_4_Pin GPIO_PIN_4
 #define LIMIT_SWITCH_4_GPIO_Port GPIOB
 #define LIMIT_SWITCH_4_EXTI_IRQn EXTI4_IRQn
