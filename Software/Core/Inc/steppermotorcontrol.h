@@ -25,6 +25,7 @@ extern uint8_t  LimitSwitchMode[6];
 extern uint8_t  MotorState[6];
 extern uint8_t  MotorHighStateSetFlag[6];
 extern int8_t   MotorDirection[6];
+extern float32_t MotorTargetAngle[6];
 
 //extern uint8_t test;
 //extern uint32_t test2;

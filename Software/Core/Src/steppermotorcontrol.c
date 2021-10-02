@@ -349,6 +349,34 @@ static void MotorRotateAbsolute(uint8_t motor_index)
 	}
 
 }
+
+/*
+ * Function Name	 			: MotorActuateHome()
+ * Function Description 		: Moves the motor shafts of all the motors based on the target angle matrix of the motor system
+ * Return Type					: void
+ * Return Type Description 		: NA
+ *
+ * Parameter(s)					:
+ * Parameter Description		:
+ * Global Variables Accessed	:
+ *
+ * Global Variable(s) Modified	:
+ * Library Function(s) Called	:
+ * Called by					:
+ *  Notes			 			: This function is to be excecuted only in the Systick handler or any loop which excecutes every 1ms
+
+ */
+
+void MotorActuateHome(void)
+{
+	for (uint32_t motor_index = 0; motor_index <=6 ; motor_index ++)
+	{
+		MotorTargetAngle[motor_index -1]  = 45;
+	}
+
+	MotorActuate();
+}
+
 /*
  * Function Name	 			: MotorActuate()
  * Function Description 		: Moves the motor shafts of all the motors based on the target angle matrix of the motor system

@@ -26,6 +26,7 @@
 #include "stm32f1xx_hal.h"
 #include "tim.h"
 #include "steppermotorcontrol.h"
+#include "kinematics.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -188,8 +189,24 @@ void SysTick_Handler(void)
 {
   /* USER CODE BEGIN SysTick_IRQn 0 */
 
-	MotorActuateTest();
 
+
+	PoseSetpoint[0] = 0;  /*Yaw*/
+	PoseSetpoint[1] = 0;  /*Pitch*/
+	PoseSetpoint[2] = 0;  /*Roll*/
+	PoseSetpoint[3] = 0;  /*delx*/
+	PoseSetpoint[4] = 0;  /*dely*/
+	PoseSetpoint[5] = 10; /*delz*/
+
+	SolveKinematics();
+
+//	MotorTargetAngle[0] = -30;
+//	MotorTargetAngle[1] = 30;
+//	MotorTargetAngle[2] = -30;
+//	MotorTargetAngle[3] = 30;
+//	MotorTargetAngle[4] = -30;
+//	MotorTargetAngle[5] = 30;
+	MotorActuate();
 
 	/*Hardware level control of motor direction pins and motor timers*/
 
