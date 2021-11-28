@@ -5,17 +5,8 @@ Circle is an open source 6 DOF robotic parallel manipulator platform. This proje
 
 Project link on my website: https://www.ayushmanchoudhuri.com/circle
 
-## 2. Hardware Setup
-
-## 3. Software Installation
-
-## 4. Documentation 
-
-## 5. Version Numbering
-This project follows the Semantic Versioning method to tag the release version numbers. The method can be found on : https://semver.org/ 
-
-## 6. Contributing
+## 2. Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-## 7. License
+## 3. License
 MIT
